@@ -21,9 +21,9 @@
   }
   glitchCanvas();
 
-  const utterance = new SpeechSynthesisUtterance("Warning. System meltdown imminent. This is Poopfart V4.");
-  utterance.pitch = 2;
-  utterance.rate = 0.7;
+  const utterance = new SpeechSynthesisUtterance("Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. Warning. System meltdown imminent. This is Poopfart V4. ");
+  utterance.pitch = 7;
+  utterance.rate = 0.4;
   speechSynthesis.speak(utterance);
 
   setTimeout(() => {
