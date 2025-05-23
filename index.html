@@ -1,33 +1,207 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>💀 POOFART V4: SYSTEM DOWN 💀</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #000;
-      color: #0f0;
-      font-family: monospace;
-    }
-    canvas, iframe, video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9999;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>💀 POOFART V4: SYSTEM DOWN 💀</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; overflow: hidden;
+    background: black;
+    color: #0f0;
+    font-family: monospace;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    transform-origin: center;
+    animation: spinZoom 5s linear infinite alternate;
+  }
+  @keyframes spinZoom {
+    0%   { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(3) rotate(720deg); }
+  }
+  canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    mix-blend-mode: difference;
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+  }
+  iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #glitch-text {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 4rem;
+    mix-blend-mode: difference;
+    user-select: none;
+    pointer-events: none;
+    text-shadow:
+      1px 0 red,
+      -1px 0 cyan,
+      0 1px lime,
+      0 -1px yellow;
+    animation: flicker 0.15s infinite alternate;
+    z-index: 10000;
+  }
+  @keyframes flicker {
+    0%   { opacity: 1; text-shadow: 1px 0 red, -1px 0 cyan, 0 1px lime, 0 -1px yellow; }
+    50%  { opacity: 0.4; text-shadow: 1px 0 yellow, -1px 0 lime, 0 1px cyan, 0 -1px red; }
+    100% { opacity: 1; text-shadow: 1px 0 cyan, -1px 0 red, 0 1px yellow, 0 -1px lime; }
+  }
+  #ascii {
+    position: fixed;
+    bottom: 10px; left: 10px;
+    color: #0f0;
+    font-family: monospace;
+    font-size: 1rem;
+    mix-blend-mode: difference;
+    user-select: none;
+    pointer-events: none;
+    white-space: pre-wrap;
+    max-width: 50vw;
+    height: 30vh;
+    overflow: auto;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border: 1px solid #0f0;
+    z-index: 9999;
+  }
+</style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<iframe src="bsod.html" frameborder="0"></iframe>
-<audio autoplay loop>
-  <source src="crash.mp3" type="audio/mpeg">
-</audio>
-<script src="main.js"></script>
+  <canvas id="c1"></canvas>
+  <canvas id="c2"></canvas>
+  <canvas id="c3"></canvas>
+
+  <iframe src="bsod.html" id="bsod-main"></iframe>
+
+  <div id="glitch-text">SYSTEM MELTDOWN IMMINENT</div>
+
+  <pre id="ascii"></pre>
+
+  <audio autoplay loop src="crash.mp3" style="display:none"></audio>
+  <audio autoplay loop src="glitch1.mp3" style="display:none"></audio>
+  <audio autoplay loop src="glitch2.mp3" style="display:none"></audio>
+
+<script>
+  // Spawn dozens of BSOD iframes randomly scattered
+  const container = document.body;
+  for(let i = 0; i < 50; i++) {
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "absolute";
+    iframe.style.top = `${Math.random() * 100}%`;
+    iframe.style.left = `${Math.random() * 100}%`;
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.opacity = Math.random() * 0.7 + 0.3;
+    iframe.style.pointerEvents = "none";
+    iframe.src = "bsod.html?" + Math.random().toString(36).slice(2);
+    container.appendChild(iframe);
+  }
+
+  // ASCII corruption spam
+  const ascii = [
+    "█▓▒░ ERROR ░▒▓█",
+    "MALWARE.EXE LOADING",
+    "SYSTEM 0xDEAD BEEF",
+    "MEMORY CORRUPTED",
+    "💀 SYSTEM FAILURE 💀",
+    "☠️ REBOOT IN PROGRESS ☠️",
+    "INFINITE LOOP DETECTED",
+    "☢️ CRASHING ☢️"
+  ];
+  const asciiContainer = document.getElementById("ascii");
+  setInterval(() => {
+    const line = ascii[Math.floor(Math.random() * ascii.length)];
+    asciiContainer.textContent += line + "\n";
+    if(asciiContainer.textContent.length > 1000) {
+      asciiContainer.textContent = asciiContainer.textContent.slice(asciiContainer.textContent.indexOf('\n') + 1);
+    }
+    asciiContainer.scrollTop = asciiContainer.scrollHeight;
+  }, 200);
+
+  // Glitch canvases logic
+  function glitchCanvas(canvas) {
+    const ctx = canvas.getContext("2d");
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    setInterval(() => {
+      for (let i = 0; i < 300; i++) {
+        ctx.fillStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 5, 5);
+      }
+      // occasional line glitches
+      for (let i = 0; i < 10; i++) {
+        ctx.strokeStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        ctx.beginPath();
+        ctx.moveTo(Math.random()*canvas.width, Math.random()*canvas.height);
+        ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height);
+        ctx.stroke();
+      }
+    }, 80);
+  }
+
+  glitchCanvas(document.getElementById("c1"));
+  glitchCanvas(document.getElementById("c2"));
+  glitchCanvas(document.getElementById("c3"));
+
+  // Disable right-click and key presses
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => { e.preventDefault(); return false; });
+
+  // Make cursor flicker madness
+  setInterval(() => {
+    document.body.style.cursor = Math.random() > 0.5 ? "crosshair" : "none";
+  }, 150);
+
+  // Glitch the URL continuously
+  setInterval(() => {
+    history.pushState({}, "", "?id=" + Math.random().toString(36));
+  }, 300);
+
+  // Clipboard spam with corrupted text
+  setInterval(() => {
+    navigator.clipboard.writeText("SYSTEM FAILURE - POOPFART V4").catch(() => {});
+  }, 500);
+
+  // Audio manipulation chaos - random playback rates for all audios
+  const audios = document.querySelectorAll("audio");
+  setInterval(() => {
+    audios.forEach(audio => {
+      audio.playbackRate = 0.5 + Math.random() * 2;
+      if (audio.paused) audio.play();
+    });
+  }, 700);
+
+  // Annoying alert cascade (optional; comment if too aggressive)
+  /*
+  function alertCascade(times = 5) {
+    if (times <= 0) return;
+    alert("🛑 FATAL ERROR: BROWSER KERNEL PANIC.");
+    confirm("SEND ERROR REPORT TO YOUR CONSCIOUSNESS?");
+    setTimeout(() => alertCascade(times - 1), 2000);
+  }
+  setTimeout(() => alertCascade(3), 5000);
+  */
+
+</script>
 </body>
 </html>
