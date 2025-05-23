@@ -1,7 +1,55 @@
-
 <!DOCTYPE html>
-<html>
-<head><style>body{margin:0;background:#0000aa;color:#fff;font-family:monospace;font-size:20px;padding:50px;}</style></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>💀 POOFART V4: SYSTEM DOWN 💀</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 50px;
+    background-color: #000022;
+    color: #0f0;
+    font-family: monospace, monospace;
+    font-size: 20px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    animation: flicker 1.5s infinite, bgPulse 3s infinite alternate;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,0,0.05),
+      rgba(0,255,0,0.05) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+    mix-blend-mode: screen;
+  }
+  #glitchline {
+    color: #0f0;
+    font-family: monospace;
+    margin-top: 20px;
+    white-space: nowrap;
+  }
+
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.4; }
+  }
+  @keyframes bgPulse {
+    0%, 100% { background-color: #000022; }
+    50% { background-color: #000088; }
+  }
+</style>
+</head>
 <body>
 💥 A problem has been detected and Windows has been shut down to prevent damage<br><br>
 💩 If this is the first time you've seen this Stop error screen,<br>
@@ -12,5 +60,51 @@ If this is a new installation, ask your hardware or software manufacturer<br>
 for any Windows updates you might need.<br><br>
 🔥 Technical Information:<br>
 *** STOP: 0x0000007B (0xFFFFF880009A9928, 0xFFFFFFFFC0000034, 0x0000000000000000)
+
+<div id="glitchline"></div>
+
+<script>
+  // Prevent right-click menu to trap user
+  document.addEventListener("contextmenu", e => e.preventDefault());
+
+  // Grab all text nodes and <br> elements in the body (to jitter text)
+  const lines = [];
+  for (let node of document.body.childNodes) {
+    if (node.nodeType === Node.TEXT_NODE || node.nodeName === "BR") {
+      lines.push(node);
+    }
+  }
+
+  // Random horizontal jitter for text nodes
+  setInterval(() => {
+    lines.forEach(line => {
+      if (line.nodeType === Node.TEXT_NODE) {
+        line.parentElement.style.textIndent = (Math.random() * 10 - 5) + "px";
+      }
+    });
+  }, 100);
+
+  // Random flicker + distortion filter effects
+  setInterval(() => {
+    if (Math.random() < 0.3) {
+      document.body.style.filter = `blur(${Math.random()*2}px) hue-rotate(${Math.random()*60}deg) contrast(${0.8 + Math.random()*0.6})`;
+    } else {
+      document.body.style.filter = "none";
+    }
+  }, 500);
+
+  // Glitchy animated ASCII text line
+  const glitchText = "⚠️ SYSTEM MALFUNCTION DETECTED ⚠️";
+  const glitchEl = document.getElementById("glitchline");
+
+  setInterval(() => {
+    let corrupted = glitchText.split("").map(c =>
+      Math.random() > 0.7
+        ? String.fromCharCode(33 + Math.floor(Math.random() * 94))
+        : c
+    ).join("");
+    glitchEl.textContent = corrupted;
+  }, 120);
+</script>
 </body>
 </html>
